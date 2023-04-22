@@ -19,11 +19,11 @@
     let tradeTargets = stalkOnBoth.concat([]);
 
     //words / phrases to search for eg "gift" you choosing beggar
-    let messagesOnBoth = []
+    let messagesOnBoth = ["psa"]
     //ONLY in GLOBAL
     let globalMessages = messagesOnBoth.concat([]);
     //ONLY in TRADE
-    let tradeMessages = messagesOnBoth.concat([]);
+    let tradeMessages = messagesOnBoth.concat(["armor cache", "cache"]);
 
     //DEVELOP
     const devMode = false;
