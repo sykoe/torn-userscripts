@@ -12,7 +12,7 @@
 (function() {
     'use strict';
     //add user IDs of people you want to stalk. there is a list for both and also do both chats have their own seperate list. By default Hardy[2131687] and Chedburn[1] are added to both lists
-    let stalkOnBoth = ["1", "2131687", "2327704", "2689377",]
+    let stalkOnBoth = ["1", "2131687",]
     //ONLY in GLOBAL
     let globalTargets = stalkOnBoth.concat([]);
     //ONLY in TRADE
@@ -21,9 +21,9 @@
     //words / phrases to search for eg "gift" you choosing beggar
     let messagesOnBoth = []
     //ONLY in GLOBAL
-    let globalMessages = messagesOnBoth.concat(["gift"]);
+    let globalMessages = messagesOnBoth.concat([]);
     //ONLY in TRADE
-    let tradeMessages = messagesOnBoth.concat(["buying"]);
+    let tradeMessages = messagesOnBoth.concat([]);
 
     //DEVELOP
     const devMode = false;
