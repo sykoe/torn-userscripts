@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
-// @namespace    sykoe.chatstalker
-// @version      1.5.1
+// @namespace    sykoe.chatstalkerbeta
+// @version      1.6.1
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -17,6 +17,8 @@
     let globalTargets = stalkOnBoth.concat([]);
     //ONLY in TRADE
     let tradeTargets = stalkOnBoth.concat([]);
+	//ONLY in FACTION
+    let factionTargets = stalkOnBoth.concat([]);
 
     //words / phrases to search for eg "gift" you choosing beggar
     let messagesOnBoth = ["psa"]
@@ -24,6 +26,8 @@
     let globalMessages = messagesOnBoth.concat([]);
     //ONLY in TRADE
     let tradeMessages = messagesOnBoth.concat(["armor cache", "cache"]);
+	//ONLY in FACTION
+    let factionMessages = messagesOnBoth.concat(["attack", "chain"]);
 
     //DEVELOP
     const devMode = false;
@@ -83,13 +87,20 @@
         else if (data.roomId == "Trade" && doesStrContainPhrases(data.messageText, tradeMessages) == true) {
             pAlert(data.senderId, data.senderName, 'Trade', data.messageText);
         }
+		//global chat
         else if (data.roomId == "Global" && globalTargets.indexOf(data.senderId) !== -1) {
             pAlert(data.senderId, data.senderName, 'Global', data.messageText);
         } else if (data.roomId == "Global" && doesStrContainPhrases(data.messageText, globalMessages) == true){
             pAlert(data.senderId, data.senderName, 'Global', data.messageText);
         }
+		//faction chat
+		else if (data.roomId.split(':')[0] == "Faction" && factionTargets.indexOf(data.senderId) !== -1) {
+            pAlert(data.senderId, data.senderName, 'Faction', data.messageText);
+        } else if (data.roomId.split(':')[0] == "Faction" && doesStrContainPhrases(data.messageText, factionMessages) == true){
+            pAlert(data.senderId, data.senderName, 'Faction', data.messageText);
+        }
 		//devMode just lets all messages through
-        else if((data.roomId == "Global" || data.roomId == "Trade" ) && devMode == true && data.senderName) {
+        else if((data.roomId == "Global" || data.roomId == "Trade" || data.roomId.split(':')[0] == "Faction") && devMode == true && data.senderName) {
             console.log(data);
             pAlert('1337', 'DevMode', data.roomId, data.senderName + ': ' + data.messageText);
         }
