@@ -11,23 +11,24 @@
 
 (function() {
     'use strict';
-    //add user IDs of people you want to stalk. there is a list for both and also do both chats have their own seperate list. By default Hardy[2131687] and Chedburn[1] are added to both lists
-    let stalkOnBoth = ["1", "2131687",]
-    //ONLY in GLOBAL
-    let globalTargets = stalkOnBoth.concat([]);
-    //ONLY in TRADE
-    let tradeTargets = stalkOnBoth.concat([]);
-	//ONLY in FACTION
-    let factionTargets = stalkOnBoth.concat([]);
+    //add user IDs of people you want to stalk. there is a list for both and also do both chats have their own seperate list. 
+	//by default Hardy[2131687], Chedburn[1], and I (Sykoe[2734951]) are added to both lists as examples
+    let stalkOnAllChats = ["1", "2131687", "2734951",]
+    //ONLY in GLOBAL chat
+    let globalTargets = stalkOnAllChats.concat([]);
+    //ONLY in TRADE chat
+    let tradeTargets = stalkOnAllChats.concat([]);
+	//ONLY in FACTION chat
+    let factionTargets = stalkOnAllChats.concat([]);
 
-    //words / phrases to search for eg "gift" you choosing beggar
-    let messagesOnBoth = ["psa"]
+    //add words / phrases to search for; eg "psa" (public service announcement) on all channels, "gift" on global, and "cache" on trade chat
+    let messagesOnAllChats = ["psa"]
     //ONLY in GLOBAL
-    let globalMessages = messagesOnBoth.concat([]);
+    let globalMessages = messagesOnAllChats.concat(["gift"]);
     //ONLY in TRADE
-    let tradeMessages = messagesOnBoth.concat(["armor cache", "cache"]);
+    let tradeMessages = messagesOnAllChats.concat(["armor cache", "cache"]);
 	//ONLY in FACTION
-    let factionMessages = messagesOnBoth.concat(["attack", "chain"]);
+    let factionMessages = messagesOnAllChats.concat(["attack", "chain"]);
 
     //DEVELOP
     const devMode = false;
@@ -61,13 +62,14 @@
     }
 
     function doesStrContainPhrases(string, phrases) {
-        for (let i = 0; i < phrases.length; i++) {
-            if (string.toLowerCase().includes(phrases[i].toLowerCase())) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+		if(string && phrases) {
+			for (let i = 0; i < phrases.length; i++) {
+				if (string.toLowerCase().includes(phrases[i].toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		return false;
     }
 
     let chatCode = document.querySelector('script[src^="/builds/chat"]');
