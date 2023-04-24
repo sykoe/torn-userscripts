@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker BETA
 // @namespace    sykoe.chatstalkerbeta
-// @version      1.8.4-beta
+// @version      1.9.0-beta
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
