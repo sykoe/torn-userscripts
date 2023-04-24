@@ -11,7 +11,8 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
-// @run-at 		 document-idle
+// @run-at       document-idle
+// @downloadURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // ==/UserScript==
 (function () {
     'use strict';
