@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker BETA
 // @namespace    sykoe.chatstalkerbeta
-// @version      1.9.0-beta
+// @version      1.9.1-beta
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -211,7 +211,7 @@
             'title': 'ChatStalker - Settings',
             'fields': {
                 'chatstalker_enable_useridtracking': {
-                    'section': GM_config.create('General Settings'),
+                    'section': [GM_config.create('General Settings')],
                     'label': 'Enabled alerting for userIds',
                     'labelPos': 'above',
                     'type': 'checkbox',
@@ -235,7 +235,7 @@
             'id': settingsId,
             'fields': {
                 'userIDs_all': {
-                    'section': GM_config.create('Tracking userID', "values need to be entered comma seperated"),
+                    'section': [GM_config.create('Tracking userID', "values need to be entered comma seperated")],
                     'label': 'ALL chats',
                     'labelPos': 'before',
                     'type': 'text',
@@ -262,7 +262,7 @@
             'id': settingsId,
             'fields': {
                 'phrases_all': {
-                    'section': GM_config.create('Searching for words/ whole phrases', "values need to be entered comma seperated"),
+                    'section': [GM_config.create('Searching for words/ whole phrases', "values need to be entered comma seperated")],
                     'label': 'ALL chats',
                     'labelPos': 'before',
                     'type': 'text',
@@ -289,7 +289,7 @@
             'id': settingsId,
             'fields': {
                 'roomsdiable_global': {
-                    'section': GM_config.create('Individual Room Settings'),
+                    'section': [GM_config.create('Individual Room Settings', "this will DISABLE the selected rooms for all stalk features")],
                     'label': 'DISABLE searching in global',
                     'labelPos': 'above',
                     'type': 'checkbox',
@@ -313,7 +313,7 @@
             'id': settingsId,
             'fields': {
                 'chatstalker_enable_devmode': {
-                    'section': GM_config.create('Dev Mode Settings'),
+                    'section': [GM_config.create('Dev Mode Settings')],
                     'label': 'Enabled developer mode',
                     'labelPos': 'above',
                     'type': 'checkbox',
