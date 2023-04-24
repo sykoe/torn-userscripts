@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker BETA
 // @namespace    sykoe.chatstalkerbeta
-// @version      1.9.1-beta
+// @version      1.9.3-prerelease
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -235,7 +235,7 @@
             'id': settingsId,
             'fields': {
                 'userIDs_all': {
-                    'section': [GM_config.create('Tracking userID', "values need to be entered comma seperated")],
+                    'section': [GM_config.create('Tracking userID'), "values need to be entered comma seperated"],
                     'label': 'ALL chats',
                     'labelPos': 'before',
                     'type': 'text',
@@ -262,7 +262,7 @@
             'id': settingsId,
             'fields': {
                 'phrases_all': {
-                    'section': [GM_config.create('Searching for words/ whole phrases', "values need to be entered comma seperated")],
+                    'section': [GM_config.create('Searching for words/ whole phrases'), "values need to be entered comma seperated"],
                     'label': 'ALL chats',
                     'labelPos': 'before',
                     'type': 'text',
@@ -289,7 +289,7 @@
             'id': settingsId,
             'fields': {
                 'roomsdiable_global': {
-                    'section': [GM_config.create('Individual Room Settings', "this will DISABLE the selected rooms for all stalk features")],
+                    'section': [GM_config.create('Individual Room Settings'), "this will DISABLE the selected rooms for all stalk features"],
                     'label': 'DISABLE searching in global',
                     'labelPos': 'above',
                     'type': 'checkbox',
