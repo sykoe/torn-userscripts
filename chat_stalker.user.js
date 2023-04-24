@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
 // @namespace    sykoe.chatstalker
-// @version      1.9.3
+// @version      1.9.4
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -14,83 +14,83 @@
 // @run-at 		 document-idle
 // ==/UserScript==
 (function () {
-    'use strict';	
+    'use strict';
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
-	
-	gmConfig_init();
+
+    gmConfig_init();
     const settings = loadSettings();
-	if(settings.enable.devmode) console.log(settings);
-	
+    if (settings.enable.devmode) console.log(settings);
+
     let chatCode = document.querySelector('script[src^="/builds/chat"]');
     let socket = new WebSocket("wss://ws-chat.torn.com/chat/ws?uid=" + chatCode.getAttribute("uid") + "&secret=" + chatCode.getAttribute("secret"));
-	
+
     socket.onmessage = function (event) {
         let data = JSON.parse(event.data)["data"][0];
-		if(settings.devmode.lograwdata) console.log(data);
-		data.roomId = data.roomId.split(':')[0];
-		if(checkIfRoomIsDisabled(data.roomId) == true) return;
-		
+        if (settings.devmode.lograwdata) console.log(data);
+        data.roomId = data.roomId.split(':')[0];
+        if (checkIfRoomIsDisabled(data.roomId) == true) return;
+
         //checks for stalked userID
-		if (settings.enable.useridtracking){
-			handleUserIdTracking(data.senderId, data.senderName, data.roomId, data.messageText, data.time);
-		}
-		//checks message for containing words/phrases
-		if (settings.enable.phrases) {
-			handleWordPhraseSearch(data.senderId, data.senderName, data.roomId, data.messageText, data.time);
-		}	
-		//devMode just lets all messages through, fakes username / id for timestamps to work		
-		if (settings.enable.devmode && settings.devmode?.allmessages) {	
-			console.log(data);
+        if (settings.enable.useridtracking) {
+            handleUserIdTracking(data.senderId, data.senderName, data.roomId, data.messageText, data.time);
+        }
+        //checks message for containing words/phrases
+        if (settings.enable.phrases) {
+            handleWordPhraseSearch(data.senderId, data.senderName, data.roomId, data.messageText, data.time);
+        }
+        //devMode just lets all messages through, fakes username / id for timestamps to work		
+        if (settings.enable.devmode && settings.devmode?.allmessages) {
+            console.log(data);
             stalkAlert('1337', 'DevMode', data.roomId, data.senderName + ': ' + data.messageText, data.time);
-		}      
+        }
     };
-	
-	function handleUserIdTracking(senderId, senderName, room, messageText, timestamp){
-		let searchScope;
-		switch(room) {
-			case 'Trade':
-				searchScope = settings.userids.trade;
-				break;
-			case 'Global':
-				searchScope = settings.userids.global;
-				break;
-			case 'Faction':
-				searchScope = settings.userids.faction;
-				break;
-			default:
-				if(settings.enable.verbose) console.log("tried handling room: '" + room + "'")
-				return;
-		}
-		if(settings.enable.verbose) console.log(senderId, senderName, room, searchScope);
-		if(searchScope.indexOf(senderId) !== -1){
-			stalkAlert(senderId, senderName, room, messageText, timestamp);
-        }	
-	}
-	
-	function handleWordPhraseSearch(senderId, senderName, room, messageText, timestamp){
-		let searchScope;
-		switch(room) {
-			case 'Trade':
-				searchScope = settings.phrases.trade;
-				break;
-			case 'Global':
-				searchScope = settings.phrases.global;
-				break;
-			case 'Faction':
-				searchScope = settings.phrases.faction;
-				break;
-			default:
-				if(settings.enable.verbose) console.log("tried handling room" + room + "'")
-				return;	
-				
-		}
-		if(doesStrContainPhrases(messageText, searchScope) == true){
-			stalkAlert(senderId, senderName, room, messageText, timestamp);
-        }	
-	}  
-	
-	function doesStrContainPhrases(string, phrases) {
+
+    function handleUserIdTracking(senderId, senderName, room, messageText, timestamp) {
+        let searchScope;
+        switch (room) {
+        case 'Trade':
+            searchScope = settings.userids.trade;
+            break;
+        case 'Global':
+            searchScope = settings.userids.global;
+            break;
+        case 'Faction':
+            searchScope = settings.userids.faction;
+            break;
+        default:
+            if (settings.enable.verbose) console.log("tried handling room: '" + room + "'")
+            return;
+        }
+        if (settings.enable.verbose) console.log(senderId, senderName, room, searchScope);
+        if (searchScope.indexOf(senderId) !== -1) {
+            stalkAlert(senderId, senderName, room, messageText, timestamp);
+        }
+    }
+
+    function handleWordPhraseSearch(senderId, senderName, room, messageText, timestamp) {
+        let searchScope;
+        switch (room) {
+        case 'Trade':
+            searchScope = settings.phrases.trade;
+            break;
+        case 'Global':
+            searchScope = settings.phrases.global;
+            break;
+        case 'Faction':
+            searchScope = settings.phrases.faction;
+            break;
+        default:
+            if (settings.enable.verbose) console.log("tried handling room" + room + "'")
+            return;
+
+        }
+        if (doesStrContainPhrases(messageText, searchScope) == true) {
+            stalkAlert(senderId, senderName, room, messageText, timestamp);
+        }
+    }
+
+    function doesStrContainPhrases(string, phrases) {
         if (string && phrases) {
             for (let i = 0; i < phrases.length; i++) {
                 if (string.toLowerCase().includes(phrases[i].toLowerCase())) {
@@ -100,9 +100,9 @@
         }
         return false;
     }
-	   
-	function stalkAlert(id, name, room, messageText, timestamp) {
-        if(handleTimestampCheck(id, room, timestamp) != true) return;
+
+    function stalkAlert(id, name, room, messageText, timestamp) {
+        if (handleTimestampCheck(id, room, timestamp) != true) return;
         let boxHtml = '<div class="stalker_modal" id="stalker_modal-' + id + '">\
                            <div class="stalker_modal-content">\
                                <p class="stalker_line">\
@@ -113,40 +113,46 @@
                            </div>\
                        </div>';
         $(".content-wrapper").prepend(boxHtml);
-		document.addEventListener("click", function (e) {
-			if (e.target.className == "stalker_close-button torn-btn") {
-				document.querySelector(".stalker_modal").remove();
-			}
-		});
+        document.addEventListener("click", function (e) {
+            if (e.target.className == "stalker_close-button torn-btn") {
+                document.querySelector(".stalker_modal").remove();
+            }
+        });
     }
-	//checks if a room is disabled via settings
-	function checkIfRoomIsDisabled(room) {
-		switch(room) {
-			case 'Trade':
-				if(settings.roomsdisable.trade) return true;
-				break;
-			case 'Global':
-				if(settings.roomsdisable.global) return true;
-				break;
-			case 'Faction':
-				if(settings.roomsdisable.faction) return true;
-				break;
-			case 'Poker': //thought to add these if needed for other features
-				return true;
-			case 'User':
-				return true;
-			default:
-				return false;
-		}
-		return false;
-	}
-	
-	//returns true if no timestamp found and saves it - if a timestamp is found (means it is the same or an older msg) it returns false
-	function handleTimestampCheck(id, room, timestamp){
-		var lastSeen = localStorage.getItem("chatStalkerTimestamps");
+    //checks if a room is disabled via settings
+    function checkIfRoomIsDisabled(room) {
+        switch (room) {
+        case 'Trade':
+            if (settings.roomsdisable.trade) return true;
+            break;
+        case 'Global':
+            if (settings.roomsdisable.global) return true;
+            break;
+        case 'Faction':
+            if (settings.roomsdisable.faction) return true;
+            break;
+        case 'Poker': //thought to add these if needed for other features
+            return true;
+        case 'User':
+            return true;
+        default:
+            return false;
+        }
+        return false;
+    }
+
+    //returns true if no timestamp found and saves it - if a timestamp is found (means it is the same or an older msg) it returns false
+    function handleTimestampCheck(id, room, timestamp) {
+        var lastSeen = localStorage.getItem("chatStalkerTimestamps");
         var last;
         if (typeof lastSeen == "undefined" || lastSeen == null) {
-            last = {"victims": {"Global": {},"Trade": {},"Faction": {}}};
+            last = {
+                "victims": {
+                    "Global": {},
+                    "Trade": {},
+                    "Faction": {}
+                }
+            };
             localStorage.setItem("chatStalkerTimestamps", JSON.stringify(last));
         } else {
             last = JSON.parse(lastSeen);
@@ -155,13 +161,13 @@
                     return false;
                 }
             }
-        }		
+        }
         last["victims"][room][id] = timestamp;
         localStorage.setItem("chatStalkerTimestamps", JSON.stringify(last));
-		return true;
-	}
+        return true;
+    }
 
-	function loadSavedValues(gmConfigKey) {
+    function loadSavedValues(gmConfigKey) {
         let savedValueSplit = GM_config.get(gmConfigKey).split(',');
         let returnArray = []
         let length = savedValueSplit.length;
@@ -173,13 +179,19 @@
         }
         return returnArray;
     }
-    
-	function loadSettings(settingsId = 'ChatStalker') {
-        let config = {enable: {}, userids: {}, phrases: {}, devmode: {}, roomsdisable: {},};
-		config.enable.useridtracking = GM_config.get('chatstalker_enable_useridtracking');
-		config.enable.phrases = GM_config.get('chatstalker_enable_phrases');
-		config.enable.advanced = GM_config.get('chatstalker_enable_advanced');
-		if(devMode) config.enable.devmode = GM_config.get('chatstalker_enable_devmode');
+
+    function loadSettings(settingsId = 'ChatStalker') {
+        let config = {
+            enable: {},
+            userids: {},
+            phrases: {},
+            devmode: {},
+            roomsdisable: {},
+        };
+        config.enable.useridtracking = GM_config.get('chatstalker_enable_useridtracking');
+        config.enable.phrases = GM_config.get('chatstalker_enable_phrases');
+        config.enable.advanced = GM_config.get('chatstalker_enable_advanced');
+        if (devMode) config.enable.devmode = GM_config.get('chatstalker_enable_devmode');
         if (config.enable.useridtracking) {
             config.userids.all = loadSavedValues('userIDs_all');
             config.userids.global = config.userids.all.concat(loadSavedValues('userids_global'));
@@ -192,19 +204,19 @@
             config.phrases.trade = config.phrases.all.concat(loadSavedValues('phrases_trade'));
             config.phrases.faction = config.phrases.all.concat(loadSavedValues('phrases_faction'));
         }
-		if (config.enable.advanced) {            
+        if (config.enable.advanced) {
             config.roomsdisable.global = GM_config.get('roomsdiable_global');
             config.roomsdisable.trade = GM_config.get('roomsdiable_trade');
             config.roomsdisable.faction = GM_config.get('roomsdiable_faction');
         }
-		if (config.enable.devmode) {
-			config.devmode.allmessages = GM_config.get('chatstalker_devmode_allmessages');
-			config.devmode.lograwdata = GM_config.get('chatstalker_devmode_logallwsdata');
-			config.devmode.verbose = GM_config.get('chatstalker_devmode_verbose');
-		}
-		return config;
+        if (config.enable.devmode) {
+            config.devmode.allmessages = GM_config.get('chatstalker_devmode_allmessages');
+            config.devmode.lograwdata = GM_config.get('chatstalker_devmode_logallwsdata');
+            config.devmode.verbose = GM_config.get('chatstalker_devmode_verbose');
+        }
+        return config;
     }
-	
+
     function gmConfig_init(settingsId = 'ChatStalker') {
         const generalSettings = {
             'id': settingsId,
@@ -285,7 +297,7 @@
                 },
             }
         };
-		const roomSettings = {
+        const roomSettings = {
             'id': settingsId,
             'fields': {
                 'roomsdiable_global': {
@@ -294,14 +306,14 @@
                     'labelPos': 'above',
                     'type': 'checkbox',
                     'default': false
-                }, 
-				'roomsdiable_trade': {
+                },
+                'roomsdiable_trade': {
                     'label': 'DISABLE searching in trade',
                     'labelPos': 'above',
                     'type': 'checkbox',
                     'default': false
-                }, 
-				'roomsdiable_faction': {
+                },
+                'roomsdiable_faction': {
                     'label': 'DISABLE searching in faction',
                     'labelPos': 'above',
                     'type': 'checkbox',
@@ -309,7 +321,7 @@
                 }
             }
         };
-		const devModeSettings = {
+        const devModeSettings = {
             'id': settingsId,
             'fields': {
                 'chatstalker_enable_devmode': {
@@ -317,43 +329,43 @@
                     'label': 'Enabled developer mode',
                     'labelPos': 'above',
                     'type': 'checkbox',
-					'save': false
-                }, 
-				'chatstalker_devmode_allmessages': {
+                    'save': false
+                },
+                'chatstalker_devmode_allmessages': {
                     'label': 'Lets all messages through',
                     'labelPos': 'above',
                     'type': 'checkbox',
                     'default': false
-                }, 
-				'chatstalker_devmode_logallwsdata': {
+                },
+                'chatstalker_devmode_logallwsdata': {
                     'label': 'Logs ws data',
                     'labelPos': 'above',
                     'type': 'checkbox',
                     'default': false
-                }, 
-				'chatstalker_devmode_verbose': {
+                },
+                'chatstalker_devmode_verbose': {
                     'label': 'Logs many things',
                     'labelPos': 'above',
                     'type': 'checkbox',
                     'default': false
                 },
             },
-			'events': {
-				'init': function(){
-					GM_config.set('chatstalker_enable_devmode', devMode)
-				}
-			}
+            'events': {
+                'init': function () {
+                    GM_config.set('chatstalker_enable_devmode', devMode)
+                }
+            }
         };
         GM_config.init(generalSettings);
         if (GM_config.get('chatstalker_enable_useridtracking')) GM_config.init(trackingUserIDsSettings);
         if (GM_config.get('chatstalker_enable_phrases')) GM_config.init(searchingPhrasesSettings);
-		if (GM_config.get('chatstalker_enable_advanced')) { //possibly multiple advanced settings
-			GM_config.init(roomSettings);
-		}
-		if (devMode) GM_config.init(devModeSettings);
-    }	
-		
-	if (window.location.href.includes("/preferences.php")) {
+        if (GM_config.get('chatstalker_enable_advanced')) { //possibly multiple advanced settings
+            GM_config.init(roomSettings);
+        }
+        if (devMode) GM_config.init(devModeSettings);
+    }
+
+    if (window.location.href.includes("/preferences.php")) {
         GM_addStyle(`#chatstalker-settings-container > div {color: white; background: repeating-linear-gradient(90deg, #6600ff, #6600ff 2px, #812bb2 0, #812bb2 4px); text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;}`);
         let preferencesHtml = '<div id="chatstalker-settings-container" class="tt-container rounding mt10">\
 								  <div class="title collapsed">\
@@ -372,7 +384,7 @@
             }
         });
     }
-	
+
     GM_addStyle(`
         .stalker_modal { border-radius: 8px; background-color: rgb(242, 242, 242); animation: animate 3s linear infinite;}
 		@keyframes animate { 0% { box-shadow: 0 0 0 0 rgba(255,109,74,.7), 0 0 0 0 rgba(255,109,74,.7);} 40% { box-shadow: 0 0 0 9px rgba(255,109,74,0), 0 0 0 0 rgba(255,109,74,.7);} 80% { box-shadow: 0 0 0 8px rgba(255,109,74,0), 0 0 0 0 rgba(255,109,74,0);} 100% { box-shadow: 0 0 0 0 rgba(255,109,74,0), 0 0 0 0 rgba(255,109,74,0);} }
