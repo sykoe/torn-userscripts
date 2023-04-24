@@ -29,6 +29,9 @@ YOU're able to customize it to YOUR needs:
 
 ![currently available Settings](https://i.imgur.com/go7hbp4.png)
 
+YOU will find these settings under your normal [Torn settings page](https://www.torn.com/preferences.php) on the bottom
+
+![click to open chat stalker settings](https://i.imgur.com/0DGI3mB.png)
 
 Click [here](https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js) to install the latest version directly from github. 
 (requires [tampermonkey](https://www.tampermonkey.net/) or another userscript engine)
