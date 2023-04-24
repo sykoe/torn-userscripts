@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
 // @namespace    sykoe.chatstalker
-// @version      1.9.4
+// @version      1.9.5
 // @description  Notifies when a user post in global or trade chat (forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -133,7 +133,7 @@
             break;
         case 'Poker': //thought to add these if needed for other features
             return true;
-        case 'User':
+        case 'Users':
             return true;
         default:
             return false;
@@ -366,7 +366,6 @@
     }
 
     if (window.location.href.includes("/preferences.php")) {
-        GM_addStyle(`#chatstalker-settings-container > div {color: white; background: repeating-linear-gradient(90deg, #6600ff, #6600ff 2px, #812bb2 0, #812bb2 4px); text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;}`);
         let preferencesHtml = '<div id="chatstalker-settings-container" class="tt-container rounding mt10">\
 								  <div class="title collapsed">\
 									<div class="text">ChatStalker - Settings</div>\
@@ -383,6 +382,15 @@
                 GM_config.open();
             }
         });
+		GM_addStyle(`
+			.mt10 {margin-top: 10px;}
+			.preference-button { cursor: pointer; font-size: 14px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.4) 0px 1px 0px; vertical-align: top; height: 16px; line-height: 16px; box-sizing:content-box; color: rgb(51, 51, 51) !important; background: linear-gradient(rgb(215, 215, 215), rgb(189, 189, 189) 17%, rgb(152, 152, 152) 61%, rgb(126, 126, 126) 83%, rgb(124, 124, 124) 87%, rgb(127, 127, 127) 91%, rgb(134, 134, 134) 96%, rgb(138, 138, 138)); border-width: 0px; border-style: initial; border-color: initial; border-image: initial; border-radius: 5px; padding: 3px 10px; text-decoration: none;}
+			.tt-container .title .text {width: -webkit-fill-available;}
+			.tt-container .title {padding-left: 10px;height: 30px;font-size: 13px;text-shadow: rgba(0, 0, 0, 0.65) 1px 1px 2px;letter-spacing: 1px;display: flex;white-space: nowrap;align-items: center;margin: initial;}
+			.tt-container.rounding:not(.always-content) .title.collapsed { border-radius: 5px;}
+			.tt-container .title .options {width: 100%; display: flex; flex-direction: row-reverse; margin-right: 4px; align-items: center;}
+			#chatstalker-settings-container > div {color: white; background: repeating-linear-gradient(90deg, #6600ff, #6600ff 2px, #812bb2 0, #812bb2 4px); text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;}
+		`);
     }
 
     GM_addStyle(`
