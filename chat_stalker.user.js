@@ -16,6 +16,7 @@
 // ==/UserScript==
 (function() {
     'use strict';
+	const version = '1.9.6'
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
 
@@ -116,7 +117,7 @@
         $(".content-wrapper").prepend(boxHtml);
         document.addEventListener("click", function(e) {
             if (e.target.className == "stalker_close-button torn-btn") {
-                document.querySelector(".stalker_modal").remove();
+                document.querySelector("#stalker_modal-" + id).remove();
             }
         });
     }
@@ -224,7 +225,7 @@
             'title': 'ChatStalker - Settings',
             'fields': {
                 'chatstalker_enable_useridtracking': {
-                    'section': [GM_config.create('General Settings')],
+                    'section': [GM_config.create('General Settings'), "(Version: " + version + ")"],
                     'label': 'Enabled alerting for userIds',
                     'labelPos': 'above',
                     'type': 'checkbox',
