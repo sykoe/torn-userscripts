@@ -2,8 +2,10 @@
 # Chat Stalker
 #### Ever missed your BFF writing something funny in global? 
 #### Missed the big giveaway in trade?
-#### Did not read trade chat 24/7 and are being kept awake by might-have-been deals?
+#### YOU are the banker of your faction and dont wanna miss money requests?
+#### Did not read trade chat 24/7 and are being kept awake by this insanely good might-have-been deal?
 #### YOU want to read every message Ched will speak to the public?
+#### YOU are in love and do not wanna miss any message by any chance!?
 #### YOU just want to stalk someone?
 
 ## Look no further!
