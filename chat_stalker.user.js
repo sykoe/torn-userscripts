@@ -14,7 +14,7 @@
 // @run-at       document-idle
 // @downloadURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // ==/UserScript==
-(function () {
+(function() {
     'use strict';
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
@@ -26,7 +26,7 @@
     let chatCode = document.querySelector('script[src^="/builds/chat"]');
     let socket = new WebSocket("wss://ws-chat.torn.com/chat/ws?uid=" + chatCode.getAttribute("uid") + "&secret=" + chatCode.getAttribute("secret"));
 
-    socket.onmessage = function (event) {
+    socket.onmessage = function(event) {
         let data = JSON.parse(event.data)["data"][0];
         if (settings.devmode.lograwdata) console.log(data);
         data.roomId = data.roomId.split(':')[0];
@@ -50,18 +50,18 @@
     function handleUserIdTracking(senderId, senderName, room, messageText, timestamp) {
         let searchScope;
         switch (room) {
-        case 'Trade':
-            searchScope = settings.userids.trade;
-            break;
-        case 'Global':
-            searchScope = settings.userids.global;
-            break;
-        case 'Faction':
-            searchScope = settings.userids.faction;
-            break;
-        default:
-            if (settings.enable.verbose) console.log("tried handling room: '" + room + "'")
-            return;
+            case 'Trade':
+                searchScope = settings.userids.trade;
+                break;
+            case 'Global':
+                searchScope = settings.userids.global;
+                break;
+            case 'Faction':
+                searchScope = settings.userids.faction;
+                break;
+            default:
+                if (settings.enable.verbose) console.log("tried handling room: '" + room + "'")
+                return;
         }
         if (settings.enable.verbose) console.log(senderId, senderName, room, searchScope);
         if (searchScope.indexOf(senderId) !== -1) {
@@ -72,18 +72,18 @@
     function handleWordPhraseSearch(senderId, senderName, room, messageText, timestamp) {
         let searchScope;
         switch (room) {
-        case 'Trade':
-            searchScope = settings.phrases.trade;
-            break;
-        case 'Global':
-            searchScope = settings.phrases.global;
-            break;
-        case 'Faction':
-            searchScope = settings.phrases.faction;
-            break;
-        default:
-            if (settings.enable.verbose) console.log("tried handling room" + room + "'")
-            return;
+            case 'Trade':
+                searchScope = settings.phrases.trade;
+                break;
+            case 'Global':
+                searchScope = settings.phrases.global;
+                break;
+            case 'Faction':
+                searchScope = settings.phrases.faction;
+                break;
+            default:
+                if (settings.enable.verbose) console.log("tried handling room" + room + "'")
+                return;
 
         }
         if (doesStrContainPhrases(messageText, searchScope) == true) {
@@ -114,7 +114,7 @@
                            </div>\
                        </div>';
         $(".content-wrapper").prepend(boxHtml);
-        document.addEventListener("click", function (e) {
+        document.addEventListener("click", function(e) {
             if (e.target.className == "stalker_close-button torn-btn") {
                 document.querySelector(".stalker_modal").remove();
             }
@@ -123,21 +123,21 @@
     //checks if a room is disabled via settings
     function checkIfRoomIsDisabled(room) {
         switch (room) {
-        case 'Trade':
-            if (settings.roomsdisable.trade) return true;
-            break;
-        case 'Global':
-            if (settings.roomsdisable.global) return true;
-            break;
-        case 'Faction':
-            if (settings.roomsdisable.faction) return true;
-            break;
-        case 'Poker': //thought to add these if needed for other features
-            return true;
-        case 'Users':
-            return true;
-        default:
-            return false;
+            case 'Trade':
+                if (settings.roomsdisable.trade) return true;
+                break;
+            case 'Global':
+                if (settings.roomsdisable.global) return true;
+                break;
+            case 'Faction':
+                if (settings.roomsdisable.faction) return true;
+                break;
+            case 'Poker': //thought to add these if needed for other features
+                return true;
+            case 'Users':
+                return true;
+            default:
+                return false;
         }
         return false;
     }
@@ -352,7 +352,7 @@
                 },
             },
             'events': {
-                'init': function () {
+                'init': function() {
                     GM_config.set('chatstalker_enable_devmode', devMode)
                 }
             }
@@ -377,13 +377,13 @@
 								  </div>\
 								</div>';
         $('.preferences-container').after(preferencesHtml);
-        document.addEventListener("click", function (e) {
+        document.addEventListener("click", function(e) {
             if (e.target.className == "preference-button") {
                 gmConfig_init();
                 GM_config.open();
             }
         });
-		GM_addStyle(`
+        GM_addStyle(`
 			.mt10 {margin-top: 10px;}
 			.preference-button { cursor: pointer; font-size: 14px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.4) 0px 1px 0px; vertical-align: top; height: 16px; line-height: 16px; box-sizing:content-box; color: rgb(51, 51, 51) !important; background: linear-gradient(rgb(215, 215, 215), rgb(189, 189, 189) 17%, rgb(152, 152, 152) 61%, rgb(126, 126, 126) 83%, rgb(124, 124, 124) 87%, rgb(127, 127, 127) 91%, rgb(134, 134, 134) 96%, rgb(138, 138, 138)); border-width: 0px; border-style: initial; border-color: initial; border-image: initial; border-radius: 5px; padding: 3px 10px; text-decoration: none;}
 			.tt-container .title .text {width: -webkit-fill-available;}
