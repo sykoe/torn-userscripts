@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
 // @namespace    sykoe.chatstalker
-// @version      1.13.2
+// @version      1.13.3
 // @description  Notifies when a user post in global or trade chat (initially forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -12,11 +12,12 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @run-at       document-idle
+// @updateURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // @downloadURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // ==/UserScript==
 (function() {
     'use strict';
-    const version = "1.13.2"
+    const version = "1.13.3"
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
 
