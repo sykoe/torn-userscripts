@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sort items in display case manage view
 // @namespace    sykoe.displaycase.sorter
-// @version      1.0
+// @version      1.2
 // @description  Sort display case with one button
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/displaycase*
@@ -16,7 +16,7 @@
         "load",
         function () {
             //DOM has loaded
-            setTimeout(() => addButton(), 200);
+            setTimeout(() => addButton(), 100);
         },
         false
     );
@@ -37,7 +37,13 @@
         $listLi.sort(function (a, b) {
             var textA = a.attributes['aria-label'].textContent.toLowerCase();
             var textB = b.attributes['aria-label'].textContent.toLowerCase();
-            return (textA > textB) ? 1 : 0;
+            if (textA < textB) {
+                return -1;
+            }
+            if (textA > textB) {
+                return 1;
+            }
+            return 0;
         });
         $.each($listLi, function (index, row) {
             $list.append(row);
