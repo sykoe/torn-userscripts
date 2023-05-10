@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
 // @namespace    sykoe.chatstalker
-// @version      1.13.3
+// @version      1.14
 // @description  Notifies when a user post in global or trade chat (initially forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -12,30 +12,30 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @updateURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
+// @updateURL    https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // @downloadURL  https://github.com/sykoe/torn-userscripts/raw/main/chat_stalker.user.js
 // ==/UserScript==
-(function() {
+(function () {
     'use strict';
-    const version = "1.13.3"
+    const version = "1.14"
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
 
     setup_GM_config();
     const settings = loadSettings();
     if (settings.enable.devmode) console.log("[ChatStalker] <dev> Settings", settings);
-	
-	const menuSettingsId = GM_registerMenuCommand("Show Settings", function() {
-	  setup_GM_config();
-	  GM_config.open();
-	}, "s");
+
+    const menuSettingsId = GM_registerMenuCommand("Show Settings", function () {
+        setup_GM_config();
+        GM_config.open();
+    }, "s");
 
     let chatCode = document.querySelector('script[src^="/builds/chat"]');
     let socket = new WebSocket("wss://ws-chat.torn.com/chat/ws?uid=" + chatCode.getAttribute("uid") + "&secret=" + chatCode.getAttribute("secret"));
 
-    socket.onmessage = function(event) {
+    socket.onmessage = function (event) {
         let data = JSON.parse(event.data)["data"][0];
-		if (data.type != 'messageReceived') return;
+        if (data.type != 'messageReceived') return;
         if (settings.devmode.lograwdata) console.log("[ChatStalkerBeta] <log raw>", data);
         data.roomId = data.roomId.split(':')[0];
         if (isRoomDisabled(data.roomId) == true) return;
@@ -58,18 +58,18 @@
     function handleUserIdTracking(senderId, senderName, room, messageText, timestamp) {
         let searchScope;
         switch (room) {
-            case 'Trade':
-                searchScope = settings.userids.trade;
-                break;
-            case 'Global':
-                searchScope = settings.userids.global;
-                break;
-            case 'Faction':
-                searchScope = settings.userids.faction;
-                break;
-            default:
-                if (settings.devmode.verbose) console.log("[ChatStalker] <verbose> tried handling room - '" + room + "'")
-                return;
+        case 'Trade':
+            searchScope = settings.userids.trade;
+            break;
+        case 'Global':
+            searchScope = settings.userids.global;
+            break;
+        case 'Faction':
+            searchScope = settings.userids.faction;
+            break;
+        default:
+            if (settings.devmode.verbose) console.log("[ChatStalker] <verbose> tried handling room - '" + room + "'")
+            return;
         }
         if (searchScope.indexOf(senderId) !== -1) {
             if (settings.devmode.verbose) console.log("[ChatStalker] <verbose> handleUserIdTracking [id, name, room, search]", [senderId, senderName, room, searchScope]);
@@ -80,18 +80,18 @@
     function handleWordPhraseSearch(senderId, senderName, room, messageText, timestamp) {
         let searchScope;
         switch (room) {
-            case 'Trade':
-                searchScope = settings.phrases.trade;
-                break;
-            case 'Global':
-                searchScope = settings.phrases.global;
-                break;
-            case 'Faction':
-                searchScope = settings.phrases.faction;
-                break;
-            default:
-                if (settings.devmode.verbose) console.log("[ChatStalker] <verbose> tried handling room '" + room + "'")
-                return;
+        case 'Trade':
+            searchScope = settings.phrases.trade;
+            break;
+        case 'Global':
+            searchScope = settings.phrases.global;
+            break;
+        case 'Faction':
+            searchScope = settings.phrases.faction;
+            break;
+        default:
+            if (settings.devmode.verbose) console.log("[ChatStalker] <verbose> tried handling room '" + room + "'")
+            return;
 
         }
         let searchResult = doesStrContainPhrases(messageText, searchScope);
@@ -144,7 +144,7 @@
                            </div>\
                        </div>';
         $(".content-wrapper").prepend(boxHtml);
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", function (e) {
             if (e.target.id == "stalker_close-" + userId) {
                 document.querySelector("#stalker_close-" + userId).parentElement.parentElement.remove();
             }
@@ -153,21 +153,21 @@
     //checks if a room is disabled via settings
     function isRoomDisabled(room) {
         switch (room) {
-            case 'Trade':
-                if (settings.roomsdisable.trade) return true;
-                break;
-            case 'Global':
-                if (settings.roomsdisable.global) return true;
-                break;
-            case 'Faction':
-                if (settings.roomsdisable.faction) return true;
-                break;
-            case 'Poker': //thought to add these if needed for other features
-                return true;
-            case 'Users':
-                return true;
-            default:
-                return false;
+        case 'Trade':
+            if (settings.roomsdisable.trade) return true;
+            break;
+        case 'Global':
+            if (settings.roomsdisable.global) return true;
+            break;
+        case 'Faction':
+            if (settings.roomsdisable.faction) return true;
+            break;
+        case 'Poker': //thought to add these if needed for other features
+            return true;
+        case 'Users':
+            return true;
+        default:
+            return false;
         }
         return false;
     }
@@ -269,7 +269,7 @@
                 },
             },
             'events': {
-                'close': function() {
+                'close': function () {
                     if (devMode) console.log("[ChatStalker] <dev> reloading settings on gmConfig_init close event");
                     const settings = loadSettings();
                     if (devMode) console.log("[ChatStalker] <dev> Settings", settings);
@@ -395,7 +395,7 @@
                     'labelPos': 'right',
                     'save': false,
                     'type': 'button',
-                    'click': function() {
+                    'click': function () {
                         let message = GM_config.get('chatstalker_devmode_highlighttest', true);
                         let searchScope = GM_config.fields['phrases_all'].value.split(',');
                         searchScope = searchScope.map(x => x.trim()).filter(x => x.length > 0 && x != "" && x != null);
@@ -408,11 +408,11 @@
                 },
             },
             'events': {
-                'init': function() {
+                'init': function () {
                     GM_config.set('chatstalker_enable_devmode', devMode)
                 },
-                'open': function() {
-                    GM_config.fields['chatstalker_devmode_highlighttest'].node.addEventListener('change', function() {
+                'open': function () {
+                    GM_config.fields['chatstalker_devmode_highlighttest'].node.addEventListener('change', function () {
                         console.log("[ChatStalker] <dev>", [GM_config.get('chatstalker_devmode_highlighttest', true), ]);
                     });
                 }
@@ -438,7 +438,7 @@
                                   </div>\
                                 </div>';
         $('.preferences-container').after(preferencesHtml);
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", function (e) {
             if (e.target.id == "chatstalker-settings-button") {
                 setup_GM_config();
                 GM_config.open();
