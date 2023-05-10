@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chat Stalker
 // @namespace    sykoe.chatstalker
-// @version      1.12.1-release
+// @version      1.13.2
 // @description  Notifies when a user post in global or trade chat (initially forked from Hardy[2131687]). Does NOT work when global/trade chat is disabled via torntools.
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/*
@@ -16,22 +16,28 @@
 // ==/UserScript==
 (function() {
     'use strict';
-    const version = "1.12.1-release"
+    const version = "1.13.2"
     //DEV MODE enables the dev mode settings and nothing else
     const devMode = false;
 
-    gmConfig_init();
+    setup_GM_config();
     const settings = loadSettings();
     if (settings.enable.devmode) console.log("[ChatStalker] <dev> Settings", settings);
+	
+	const menuSettingsId = GM_registerMenuCommand("Show Settings", function() {
+	  setup_GM_config();
+	  GM_config.open();
+	}, "s");
 
     let chatCode = document.querySelector('script[src^="/builds/chat"]');
     let socket = new WebSocket("wss://ws-chat.torn.com/chat/ws?uid=" + chatCode.getAttribute("uid") + "&secret=" + chatCode.getAttribute("secret"));
 
     socket.onmessage = function(event) {
         let data = JSON.parse(event.data)["data"][0];
-        if (settings.devmode.lograwdata) console.log("[ChatStalker] <log raw>", data);
+		if (data.type != 'messageReceived') return;
+        if (settings.devmode.lograwdata) console.log("[ChatStalkerBeta] <log raw>", data);
         data.roomId = data.roomId.split(':')[0];
-        if (checkIfRoomIsDisabled(data.roomId) == true) return;
+        if (isRoomDisabled(data.roomId) == true) return;
 
         //checks for stalked userID
         if (settings.enable.useridtracking) {
@@ -144,7 +150,7 @@
         });
     }
     //checks if a room is disabled via settings
-    function checkIfRoomIsDisabled(room) {
+    function isRoomDisabled(room) {
         switch (room) {
             case 'Trade':
                 if (settings.roomsdisable.trade) return true;
@@ -236,7 +242,7 @@
         return config;
     }
 
-    function gmConfig_init(settingsId = 'ChatStalker') {
+    function setup_GM_config(settingsId = 'ChatStalker') {
         const generalSettings = {
             'id': settingsId,
             'title': 'ChatStalker - Settings',
@@ -425,15 +431,15 @@
                                   <div class="title collapsed">\
                                     <div class="text">ChatStalker - Settings</div>\
                                     <div class="options">\
-                                      <a class="preference-button" target="_blank">Settings\
+                                      <a id="chatstalker-settings-button" class="preference-button" target="_blank">Settings\
                                       </a>\
                                     </div>\
                                   </div>\
                                 </div>';
         $('.preferences-container').after(preferencesHtml);
         document.addEventListener("click", function(e) {
-            if (e.target.className == "preference-button") {
-                gmConfig_init();
+            if (e.target.id == "chatstalker-settings-button") {
+                setup_GM_config();
                 GM_config.open();
             }
         });
