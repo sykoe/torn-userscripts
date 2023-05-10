@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sort items in display case manage view
 // @namespace    sykoe.displaycase.sorter
-// @version      0.1
+// @version      1.0
 // @description  Sort display case with one button
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/displaycase*
