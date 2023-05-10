@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Sort items in display case manage view
 // @namespace    sykoe.displaycase.sorter
-// @version      1.2
-// @description  Sort display case with one button
+// @version      1.3
+// @description  Sort display case with one button (may need a reload to appear after switching from 'display' to 'manage' display case)
 // @author       Sykoe[2734951]
 // @match        https://www.torn.com/displaycase*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -16,11 +16,11 @@
         "load",
         function () {
             //DOM has loaded
-            setTimeout(() => addButton(), 100);
+            setTimeout(() => addButton(), 300);
         },
         false
     );
-
+	
     function addButton() {
         const button = `<button id="sortItems" style="color: var(--default-blue-color); cursor: pointer; margin-right: 0;">Sort!</button>`;
         $('#skip-to-content').append(button);
