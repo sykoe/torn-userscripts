@@ -146,7 +146,7 @@
         $(".content-wrapper").prepend(boxHtml);
         document.addEventListener("click", function (e) {
             if (e.target.id == "stalker_close-" + userId) {
-                document.querySelector("#stalker_close-" + userId).parentElement.parentElement.remove();
+                document.querySelector("#stalker_modal-" + userId).remove();
             }
         });
     }
